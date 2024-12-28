@@ -31,30 +31,34 @@
     </div>
 
     <script>
-        async function makeApiRequest() {
+        function makeApiRequest() {
             const userInput = document.getElementById('userInput').value;
             const resultDiv = document.getElementById('result');
             resultDiv.innerHTML = '';
 
-            try {
-                const response = await fetch(`https://apibay.org/q.php?q=${encodeURIComponent(userInput)}`, {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Access-Control-Allow-Origin': '*', // CORS header
-                    }
-                });
+            // Create a script element
+            const script = document.createElement('script');
+            // Set the src attribute to the API endpoint with the callback parameter
+            script.src = `https://apibay.org/q.php?q=${encodeURIComponent(userInput)}&callback=handleResponse`;
+            // Append the script element to the document
+            document.body.appendChild(script);
+        }
 
-                if (!response.ok) {
-                    throw new Error(`Error: ${response.status} ${response.statusText}`);
-                }
-
-                const data = await response.json();
+        // Callback function to handle the JSONP response
+        function handleResponse(data) {
+            const resultDiv = document.getElementById('result');
+            if (data) {
                 resultDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
-            } catch (error) {
-                alert(`An error occurred: ${error.message}`);
+            } else {
+                alert('An error occurred: Invalid response data');
             }
         }
+
+        // Handle JSONP errors (not a standard way, but a workaround)
+        window.onerror = function (message, source, lineno, colno, error) {
+            alert(`An error occurred: ${message}`);
+            return true; // Prevent the default handler
+        };
     </script>
 </body>
 </html>

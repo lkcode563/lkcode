@@ -3,9 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hello World</title>
+    <title>API Call Example</title>
 </head>
 <body>
-    <h1>Hello, World!</h1>
+    <h1>API Call Example</h1>
+    <form id="apiForm">
+        <label for="userInput">Enter a value:</label>
+        <input type="text" id="userInput" name="userInput" required>
+        <button type="submit">Submit</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('apiForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent form from submitting the traditional way
+
+            const userInput = document.getElementById('userInput').value;
+            const apiUrl = `https://api.example.com/data?query=${userInput}`;
+
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Display the result
+                    const resultDiv = document.getElementById('result');
+                    resultDiv.innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+                })
+                .catch(error => {
+                    alert('There was a problem with the fetch operation:', error);
+                });
+        });
+    </script>
 </body>
 </html>

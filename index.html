@@ -37,13 +37,7 @@
             resultDiv.innerHTML = '';
 
             try {
-                const response = await fetch('https://api.example.com/endpoint', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ input: userInput })
-                });
+                const response = await fetch(`https://apibay.org/q.php?q=${encodeURIComponent(userInput)}`);
 
                 if (!response.ok) {
                     throw new Error(`Error: ${response.status} ${response.statusText}`);
